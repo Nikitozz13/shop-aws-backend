@@ -7,6 +7,18 @@ const getProducts: () => Promise<Array<ProductSchema>> = async () => {
   })
 }
 
+const getProductById: (productId: string) => Promise<ProductSchema> = async (productId) => {
+  return new Promise(async (resolve, reject) => {
+    const products = await getProducts();
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+      reject(`Product "${productId}" not found`);
+    }
+    resolve(product);
+  })
+}
+
 export {
   getProducts,
+  getProductById,
 }
