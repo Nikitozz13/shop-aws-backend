@@ -8,7 +8,8 @@ export const formatJSONResponse = (response: Record<string, unknown> | Array<any
   return {
     statusCode: 200,
     headers: {
-      "Access-Control-Allow-Origin": "https://djli799ppaabs.cloudfront.net",
+      // "Access-Control-Allow-Origin": "https://djli799ppaabs.cloudfront.net",
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
     },
     body: JSON.stringify(response)

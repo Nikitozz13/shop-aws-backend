@@ -8,10 +8,14 @@ import {
 const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: [
+    'serverless-auto-swagger',
+    'serverless-esbuild',
+  ],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
+    stage: 'dev',
     region: 'eu-west-2',
     apiGateway: {
       minimumCompressionSize: 1024,
@@ -38,6 +42,13 @@ const serverlessConfiguration: AWS = {
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,
+    },
+    autoswagger: {
+      apiType: 'httpApi',
+      typefiles: ['./src/models/Product.ts'],
+      generateSwaggerOnDeploy: true,
+      useStage: true,
+      host: 'ecjqmbb4ij.execute-api.eu-west-2.amazonaws.com/dev',
     },
   },
 };
