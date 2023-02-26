@@ -5,7 +5,7 @@ import { getProducts } from '@libs/get-data-actions';
 
 import schema from './schema';
 
-const getProductsList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getProductsList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
   const products = await getProducts();
   return formatJSONResponse(products);
 };

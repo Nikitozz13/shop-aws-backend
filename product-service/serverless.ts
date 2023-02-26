@@ -10,7 +10,7 @@ const serverlessConfiguration: AWS = {
   frameworkVersion: '3',
   plugins: [
     'serverless-auto-swagger',
-    'serverless-esbuild',
+    'serverless-webpack',
   ],
   provider: {
     name: 'aws',
@@ -33,22 +33,19 @@ const serverlessConfiguration: AWS = {
   },
   package: { individually: true },
   custom: {
-    esbuild: {
-      bundle: true,
-      minify: false,
-      sourcemap: true,
-      exclude: ['aws-sdk'],
-      target: 'node14',
-      define: { 'require.resolve': undefined },
-      platform: 'node',
-      concurrency: 10,
+    client: {
+      apiHostPath: 'ecjqmbb4ij.execute-api.eu-west-2.amazonaws.com/dev',
+    },
+    webpack: {
+      webpackConfig: 'webpack.config.js',
+      includeModules: true,
     },
     autoswagger: {
       apiType: 'httpApi',
       typefiles: ['./src/models/Product.ts'],
       generateSwaggerOnDeploy: true,
       useStage: true,
-      host: 'ecjqmbb4ij.execute-api.eu-west-2.amazonaws.com/dev',
+      host: "${self:custom.client.apiHostPath}",
     },
   },
 };
