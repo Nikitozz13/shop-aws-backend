@@ -1,12 +1,13 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { getProducts } from '@libs/get-data-actions';
+import { getProductStocks } from '@libs/dynamo-service';
 
 import schema from './schema';
 
 const getProductsList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
-  const products = await getProducts();
+  const products = await getProductStocks();
+  console.log('Dynamo:result:products', products);
   return formatJSONResponse(products);
 };
 

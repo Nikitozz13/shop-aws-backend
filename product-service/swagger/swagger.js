@@ -53,22 +53,22 @@
     }
   },
   "definitions": {
-    "ProductSchema": {
+    "Product": {
       "properties": {
         "id": {
-          "title": "ProductSchema.id",
+          "title": "Product.id",
           "type": "string"
         },
         "title": {
-          "title": "ProductSchema.title",
+          "title": "Product.title",
           "type": "string"
         },
         "description": {
-          "title": "ProductSchema.description",
+          "title": "Product.description",
           "type": "string"
         },
         "price": {
-          "title": "ProductSchema.price",
+          "title": "Product.price",
           "type": "number"
         }
       },
@@ -79,8 +79,30 @@
         "price"
       ],
       "additionalProperties": false,
-      "title": "ProductSchema",
+      "title": "Product",
       "type": "object"
+    },
+    "Stock": {
+      "properties": {
+        "product_id": {
+          "title": "Stock.product_id",
+          "type": "string"
+        },
+        "count": {
+          "title": "Stock.count",
+          "type": "number"
+        }
+      },
+      "required": [
+        "product_id",
+        "count"
+      ],
+      "additionalProperties": false,
+      "title": "Stock",
+      "type": "object"
+    },
+    "ProductStock": {
+      "title": "ProductStock"
     }
   },
   "securityDefinitions": {},

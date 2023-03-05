@@ -1,6 +1,6 @@
-import { ProductSchema } from "@models/Product";
+import { Product } from "@models/Product";
 
-const products: Array<ProductSchema> = [
+const products: Array<Product> = [
   {
     id: "1",
     title: "Product 1",
