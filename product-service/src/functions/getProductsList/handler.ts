@@ -12,7 +12,7 @@ const getProductsList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     console.log('Dynamo:result:getProductsList', products);
     return formatJSONResponse(products);
   } catch (e) {
-    return formatJSONResponse({ error: e }, 500);
+    return formatJSONResponse({ error: e.message }, 500);
   }
 };
 

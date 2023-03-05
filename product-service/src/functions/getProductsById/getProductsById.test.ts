@@ -11,9 +11,13 @@ jest.mock('@libs/lambda', () => {
 });
 
 describe("getProductsById", () => {
+  const mockProduct = { id: "2", title: "Product 2" };
+
+  beforeEach(() => {
+    (getProductStockById as jest.Mock).mockClear().mockResolvedValue(mockProduct);
+  });
+
   test("should return needed product with status 200", async () => {
-    const mockProduct = { id: "2", title: "Product 2" };
-    (getProductStockById as jest.Mock).mockResolvedValueOnce(mockProduct);
     await LambdaTester(getProductsById)
       .event({pathParameters: { productId: '2' }} as any)
       .expectResult((result) => {
@@ -22,10 +26,10 @@ describe("getProductsById", () => {
       });
   });
 
-  test("should return error when product was not found", async () => {
+  test("should return error when product was not found with status 500", async () => {
     const errorMessage = 'Product not found';
     const expectedResult = { error: errorMessage };
-    (getProductStockById as jest.Mock).mockImplementationOnce(() => Promise.reject(errorMessage));
+    (getProductStockById as jest.Mock).mockImplementationOnce(() => Promise.reject(new Error(errorMessage)));
     await LambdaTester(getProductsById)
       .event({pathParameters: { productId: '3' }} as any)
       .expectResult((result) => {
