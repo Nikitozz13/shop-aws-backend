@@ -8,9 +8,10 @@ import schema from './schema';
 const getProductsById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
     const { productId } = event.pathParameters;
+    console.log('Dynamo:event:getProductsById with arguments', { productId });
     const product = await getProductStockById(productId);
-    const { PRODUCTS_TABLE_NAME, STOCKS_TABLE_NAME } = process.env;
-    return formatJSONResponse({ ...product, PRODUCTS_TABLE_NAME, STOCKS_TABLE_NAME });
+    console.log('Dynamo:result:getProductsById', product);
+    return formatJSONResponse(product);
   } catch (e) {
     return formatJSONResponse({ error: e }, 500);
   }

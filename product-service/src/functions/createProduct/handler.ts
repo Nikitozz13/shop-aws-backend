@@ -3,7 +3,6 @@ import { middyfy } from '@libs/lambda';
 import { formatJSONResponse } from '@libs/api-gateway';
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { createProduct as createProductRequest } from '@libs/dynamo-service';
-import { Product } from '@models/Product';
 
 import schema from './schema';
 
@@ -16,21 +15,14 @@ class InvalidProductDataError extends Error {
 
 const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    console.log('Dynamo:event:createProduct', event);
-
+    console.log('Dynamo:event:createProduct with arguments', { ...event.body });
     const { title, description = '', price } = event.body;
     if (!title || !description || !price) {
       throw new InvalidProductDataError('Product data is invalid');
     }
 
     const uuid = uuidv4();
-    const mockProduct: Product = {
-      id: uuid,
-      title,
-      description,
-      price,
-    };
-    const result = await createProductRequest(mockProduct);
+    const result = await createProductRequest({ id: uuid, title, description, price });
     console.log('Dynamo:result:createProduct', result);
 
     return formatJSONResponse(result);

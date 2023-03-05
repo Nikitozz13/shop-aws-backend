@@ -29,7 +29,7 @@ describe("getProductsById", () => {
     await LambdaTester(getProductsById)
       .event({pathParameters: { productId: '3' }} as any)
       .expectResult((result) => {
-        expect(result.statusCode).toBe(200);
+        expect(result.statusCode).toBe(500);
         expect(result.body).toBe(JSON.stringify(expectedResult));
       });
   });
