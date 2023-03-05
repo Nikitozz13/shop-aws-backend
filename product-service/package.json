@@ -4,7 +4,10 @@
   "description": "Serverless aws-nodejs-typescript template",
   "main": "serverless.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "fillDb": "npm run fillDb:products && npm run fillDb:stocks",
+    "fillDb:products": "aws dynamodb batch-write-item --request-items file://./scripts/db-test-examples/my-store-app_products.json",
+    "fillDb:stocks": "aws dynamodb batch-write-item --request-items file://./scripts/db-test-examples/my-store-app_stocks.json"
   },
   "engines": {
     "node": ">=14.15.0"

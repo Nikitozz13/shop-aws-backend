@@ -1,0 +1,148 @@
+{
+  "my-store-app_products": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "17aa4a6d-5e53-4e49-92f9-1f7eed3a6f00"
+          },
+          "title": {
+            "S": "Harry Potter and the Philosopher's Stone"
+          },
+          "description": {
+            "S": "The first novel in the Harry Potter series"
+          },
+          "price": {
+            "N": "24"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "dafa2b5b-1cb4-4ac9-93ed-7dfbaae1c3e4"
+          },
+          "title": {
+            "S": "The Hobbit"
+          },
+          "description": {
+            "S": "The Hobbit is set within Tolkien's fictional universe and follows the quest of home-loving Bilbo Baggins"
+          },
+          "price": {
+            "N": "20"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "26e2b80e-6d08-4e74-b8b1-8e23de32735c"
+          },
+          "title": {
+            "S": "To Kill a Mockingbird"
+          },
+          "description": {
+            "S": "A novel by the American author Harper Lee"
+          },
+          "price": {
+            "N": "22"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "cd88506f-40b1-41df-be0c-19f09d463860"
+          },
+          "title": {
+            "S": "War and Peace"
+          },
+          "description": {
+            "S": "The novel chronicles the French invasion of Russia and the impact of the Napoleonic era on Tsarist society"
+          },
+          "price": {
+            "N": "42"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "7a664c28-d989-4604-82f4-61d820488d6f"
+          },
+          "title": {
+            "S": "The Great Gatsby"
+          },
+          "description": {
+            "S": "A novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby"
+          },
+          "price": {
+            "N": "14"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "c9ea9fb1-fd4f-4c72-9540-7426ea86d2e5"
+          },
+          "title": {
+            "S": "Fahrenheit 451"
+          },
+          "description": {
+            "S": "Presents an American society where books have been personified and outlawed and 'firemen' burn any that are found"
+          },
+          "price": {
+            "N": "26"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "0a5705df-8d9a-4692-b70e-1e4c6693aa03"
+          },
+          "title": {
+            "S": "Animal Farm"
+          },
+          "description": {
+            "S": "It tells the story of a group of farm animals who rebel against their human farmer, hoping to create a society where the animals can be equal, free, and happy"
+          },
+          "price": {
+            "N": "17"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "06acd9d1-21e0-4f91-8770-86cb16d1070e"
+          },
+          "title": {
+            "S": "Life of Pi"
+          },
+          "description": {
+            "S": "The protagonist explores issues of spirituality and metaphysics from an early age"
+          },
+          "price": {
+            "N": "30"
+          }
+        }
+      }
+    }
+  ]
+}
