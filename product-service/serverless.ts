@@ -2,7 +2,8 @@ import type { AWS } from '@serverless/typescript';
 
 import {
   getProductsList,
-  getProductsById
+  getProductsById,
+  createProduct,
 } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
@@ -38,6 +39,7 @@ const serverlessConfiguration: AWS = {
   functions: {
     getProductsList,
     getProductsById,
+    createProduct,
   },
   package: { individually: true },
   custom: {

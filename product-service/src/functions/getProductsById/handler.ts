@@ -12,9 +12,7 @@ const getProductsById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     const { PRODUCTS_TABLE_NAME, STOCKS_TABLE_NAME } = process.env;
     return formatJSONResponse({ ...product, PRODUCTS_TABLE_NAME, STOCKS_TABLE_NAME });
   } catch (e) {
-    return formatJSONResponse({
-      error: e
-    });
+    return formatJSONResponse({ error: e }, 500);
   }
 };
 

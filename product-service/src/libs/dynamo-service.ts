@@ -25,9 +25,16 @@ class DynamoService {
 
   static async scan<T>(tableName: string) {
     const result = await DynamoService.dynamo.scan({
-      TableName: tableName
+      TableName: tableName,
     }).promise();
     return result.Items as Array<T>;
+  }
+
+  static async put<T>(tableName: string, item: T) {
+    return DynamoService.dynamo.put({
+      TableName: tableName,
+      Item: item,
+    }).promise();
   }
 
   static getProducts = async () => {
@@ -48,6 +55,10 @@ class DynamoService {
     }) as Array<ProductStock>;
     return productStocks;
   }
+
+  static createProduct = async (product: Product) => {
+    return DynamoService.put(DynamoService.productsTableName, product);
+  }
 }
 
 const getProductStocks: () => Promise<Array<ProductStock>> = async () => {
@@ -55,17 +66,20 @@ const getProductStocks: () => Promise<Array<ProductStock>> = async () => {
 }
 
 const getProductStockById: (productId: string) => Promise<ProductStock> = async (productId) => {
-  return new Promise(async (resolve, reject) => {
-    const products = await getProductStocks();
-    const product = products.find(p => p.id === productId);
-    if (!product) {
-      reject(`Product "${productId}" not found`);
-    }
-    resolve(product);
-  })
+  const products = await getProductStocks();
+  const product = products.find(p => p.id === productId);
+  if (!product) {
+    throw new Error(`Product "${productId}" not found`);
+  }
+  return product;
+}
+
+const createProduct: (product: Product) => Promise<any> = async (product) => {
+  return await DynamoService.createProduct(product);
 }
 
 export {
   getProductStocks,
   getProductStockById,
+  createProduct,
 }
