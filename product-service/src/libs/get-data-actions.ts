@@ -1,5 +1,6 @@
 import { ProductSchema } from '@models/Product';
 import mockProducts from '@mocks/products';
+import { InvalidProductDataError } from '@libs/errors';
 
 const getProducts: () => Promise<Array<ProductSchema>> = async () => {
   return new Promise((resolve) => {
@@ -12,7 +13,7 @@ const getProductById: (productId: string) => Promise<ProductSchema> = async (pro
     const products = await getProducts();
     const product = products.find(p => p.id === productId);
     if (!product) {
-      reject(`Product "${productId}" not found`);
+      reject(new InvalidProductDataError(`Product "${productId}" not found`));
     }
     resolve(product);
   })

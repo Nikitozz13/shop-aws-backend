@@ -2,6 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { getProductById } from '@libs/get-data-actions';
+import { InvalidProductDataError } from '@libs/errors';
 
 import schema from './schema';
 
@@ -11,9 +12,11 @@ const getProductsById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     const product = await getProductById(productId);
     return formatJSONResponse(product);
   } catch (e) {
-    return formatJSONResponse({
-      error: e
-    });
+    if (e instanceof InvalidProductDataError) {
+      console.log('InvalidProductDataError', e.message);
+      return formatJSONResponse({ error: e.message }, 404);
+    }
+    return formatJSONResponse({ error: e.message }, 500);
   }
 };
 
