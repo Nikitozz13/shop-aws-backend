@@ -6,15 +6,13 @@ const joinArrays = ({ a, b, idName, foreignIdName }) => {
   a.forEach((item) => {
     map[item[idName]] = item;
   })
-  console.log('map:a', map);
+
   b.forEach((item) => {
     const { [foreignIdName]: id, ...rest } = item;
     if (map[id]) {
       map[id] = { ...map[id], ...rest }
     }
   })
-  console.log('map:b', map);
-  console.log('map:values', Object.values(map));
   return Object.values(map);
 }
 
@@ -59,6 +57,26 @@ class DynamoService {
   static createProduct = async (product: Product) => {
     return DynamoService.put(DynamoService.productsTableName, product);
   }
+
+  static putWithTransaction = async (product: Product, stock: Stock) => {
+    const params = {
+      TransactItems: [
+        {
+          Put: {
+            TableName: DynamoService.productsTableName,
+            Item: product,
+          },
+        },
+        {
+          Put: {
+            TableName: DynamoService.stocksTableName,
+            Item: stock,
+          },
+        },
+      ]
+    };
+    return DynamoService.dynamo.transactWrite(params).promise();
+  }
 }
 
 const getProductStocks: () => Promise<Array<ProductStock>> = async () => {
@@ -78,8 +96,13 @@ const createProduct: (product: Product) => Promise<any> = async (product) => {
   return await DynamoService.createProduct(product);
 }
 
+const createProductTransaction: (product: Product, stock: Stock) => Promise<any> = async (product, stock) => {
+  return await DynamoService.putWithTransaction(product, stock);
+}
+
 export {
   getProductStocks,
   getProductStockById,
   createProduct,
+  createProductTransaction,
 }
