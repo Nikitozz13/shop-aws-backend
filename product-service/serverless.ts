@@ -34,6 +34,9 @@ const serverlessConfiguration: AWS = {
         managedPolicies: ['arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'],
       },
     },
+    httpApi: {
+      cors: true,
+    },
   },
   // import the function via paths
   functions: {

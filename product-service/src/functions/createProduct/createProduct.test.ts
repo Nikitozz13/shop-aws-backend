@@ -1,6 +1,6 @@
 import * as LambdaTester from "lambda-tester";
 import { main as createProduct } from "@functions/createProduct/handler";
-import { createProduct as createProductRequest } from "@libs/dynamo-service";
+import { createProductTransaction as createProductRequest } from "@libs/dynamo-service";
 
 const mockedUUIDValue = '2bf0c181-b525-4c84-ab2a-38c8815a7594';
 
@@ -19,12 +19,14 @@ describe("createProduct", () => {
   });
 
   test("should call product creation with needed data and return status 200", async () => {
-    const mockProduct = { title: "Product 2", description: "Product 2 description", price: 123 };
+    const mockBody = { title: "Product 2", description: "Product 2 description", price: 123, count: 321 };
+    const mockProduct = { id: mockedUUIDValue, title: mockBody.title, description: mockBody.description, price: mockBody.price };
+    const mockStock = { product_id: mockedUUIDValue, count: mockBody.count };
     await LambdaTester(createProduct)
-      .event({body: mockProduct} as any)
+      .event({body: mockBody} as any)
       .expectResult((result) => {
         expect(result.statusCode).toBe(200);
-        expect(createProductRequest).toHaveBeenCalledWith({ id: mockedUUIDValue, ...mockProduct});
+        expect(createProductRequest).toHaveBeenNthCalledWith(1, mockProduct, mockStock);
         expect(result.body).toBe(JSON.stringify({}));
       }
     );
@@ -43,15 +45,14 @@ describe("createProduct", () => {
   });
 
   test("should handle internal error with status 500", async () => {
-    const mockProduct = { title: "Product 2", description: "Product 2 description", price: 123 };
+    const mockBody = { title: "Product 2", description: "Product 2 description", price: 123, count: 321 };
     const errorMessage = 'Internal Error';
     const expectedResult = { error: errorMessage };
     (createProductRequest as jest.Mock).mockImplementationOnce(() => Promise.reject(new Error(errorMessage)));
     await LambdaTester(createProduct)
-      .event({body: mockProduct} as any)
+      .event({body: mockBody} as any)
       .expectResult((result) => {
         expect(result.statusCode).toBe(500);
-        expect(createProductRequest).toHaveBeenCalledWith({ id: mockedUUIDValue, ...mockProduct});
         expect(result.body).toBe(JSON.stringify(expectedResult));
       }
     );
