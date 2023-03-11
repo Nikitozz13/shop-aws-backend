@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { getProductById } from '@libs/get-data-actions';
+import { getProductStockById } from '@libs/dynamo-service';
 import { InvalidProductDataError } from '@libs/errors';
 
 import schema from './schema';
@@ -9,7 +9,9 @@ import schema from './schema';
 const getProductsById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
     const { productId } = event.pathParameters;
-    const product = await getProductById(productId);
+    console.log('Dynamo:event:getProductsById with arguments', { productId });
+    const product = await getProductStockById(productId);
+    console.log('Dynamo:result:getProductsById', product);
     return formatJSONResponse(product);
   } catch (e) {
     if (e instanceof InvalidProductDataError) {

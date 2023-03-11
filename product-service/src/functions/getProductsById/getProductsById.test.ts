@@ -1,9 +1,9 @@
 import * as LambdaTester from "lambda-tester";
 import { main as getProductsById } from "@functions/getProductsById/handler";
-import { getProductById } from "@libs/get-data-actions";
 import { InvalidProductDataError } from '@libs/errors';
+import { getProductStockById } from "@libs/dynamo-service";
 
-jest.mock('@libs/get-data-actions');
+jest.mock('@libs/dynamo-service');
 
 jest.mock('@libs/lambda', () => {
   return {
@@ -15,11 +15,10 @@ describe("getProductsById", () => {
   const mockProduct = { id: "2", title: "Product 2" };
 
   beforeEach(() => {
-    (getProductById as jest.Mock).mockClear().mockResolvedValue(mockProduct);
-  })
+    (getProductStockById as jest.Mock).mockClear().mockResolvedValue(mockProduct);
+  });
 
   test("should return needed product with status 200", async () => {
-    (getProductById as jest.Mock).mockResolvedValueOnce(mockProduct);
     await LambdaTester(getProductsById)
       .event({pathParameters: { productId: '2' }} as any)
       .expectResult((result) => {
@@ -28,10 +27,10 @@ describe("getProductsById", () => {
       });
   });
 
-  test("should return error when product was not found with status 404", async () => {
+  test("should return error when product was not found with status 500", async () => {
     const errorMessage = 'Product not found';
     const expectedResult = { error: errorMessage };
-    (getProductById as jest.Mock).mockImplementationOnce(() => Promise.reject(new InvalidProductDataError(errorMessage)));
+    (getProductStockById as jest.Mock).mockImplementationOnce(() => Promise.reject(new InvalidProductDataError(errorMessage)));
     await LambdaTester(getProductsById)
       .event({pathParameters: { productId: '3' }} as any)
       .expectResult((result) => {
@@ -41,9 +40,9 @@ describe("getProductsById", () => {
   });
 
   test("should return internal error with status 500", async () => {
-    const errorMessage = 'Internal Error';
+    const errorMessage = 'Product not found';
     const expectedResult = { error: errorMessage };
-    (getProductById as jest.Mock).mockImplementationOnce(() => Promise.reject(new Error(errorMessage)));
+    (getProductStockById as jest.Mock).mockImplementationOnce(() => Promise.reject(new Error(errorMessage)));
     await LambdaTester(getProductsById)
       .event({pathParameters: { productId: '3' }} as any)
       .expectResult((result) => {

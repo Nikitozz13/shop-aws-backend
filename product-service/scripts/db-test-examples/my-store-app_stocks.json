@@ -1,0 +1,100 @@
+{
+  "my-store-app_stocks": [
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "17aa4a6d-5e53-4e49-92f9-1f7eed3a6f00"
+          },
+          "count": {
+            "N": "332"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "dafa2b5b-1cb4-4ac9-93ed-7dfbaae1c3e4"
+          },
+          "count": {
+            "N": "613"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "26e2b80e-6d08-4e74-b8b1-8e23de32735c"
+          },
+          "count": {
+            "N": "5"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "cd88506f-40b1-41df-be0c-19f09d463860"
+          },
+          "count": {
+            "N": "57"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "7a664c28-d989-4604-82f4-61d820488d6f"
+          },
+          "count": {
+            "N": "715"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "c9ea9fb1-fd4f-4c72-9540-7426ea86d2e5"
+          },
+          "count": {
+            "N": "23"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "0a5705df-8d9a-4692-b70e-1e4c6693aa03"
+          },
+          "count": {
+            "N": "215"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "product_id": {
+            "S": "06acd9d1-21e0-4f91-8770-86cb16d1070e"
+          },
+          "count": {
+            "N": "85"
+          }
+        }
+      }
+    }
+  ]
+}
