@@ -1,4 +1,5 @@
-import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
@@ -11,17 +12,20 @@ const importProductsFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = as
   
   try {
     const { name } = event.queryStringParameters;
-    const resultUrl = `https://${process.env.S3_BUCKET}.s3.amazonaws.com/uploaded/${name}`;
+    if (!name) {
+      throw new Error('No parameter "name" specified');
+    }
 
     const s3client = new S3Client({ region: process.env.AWS_REGION })
-    const s3Response = await s3client.send(new ListObjectsV2Command({
+    const command = new PutObjectCommand({
       Bucket: process.env.S3_BUCKET,
-      Prefix: '',
-    }));
+      Key: `uploaded/${name}`
+    });
+    const signedUrl = await getSignedUrl(s3client, command, { expiresIn: 3600 });
 
-    console.log('S3:importProductsFile:result', s3Response);
+    console.log('S3:importProductsFile:signedUrl', signedUrl);
 
-    return formatJSONResponse(resultUrl);
+    return formatJSONResponse(signedUrl);
   } catch (e) {
     return formatJSONResponse(e.message, 500);
   }
