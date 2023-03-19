@@ -4,6 +4,7 @@ import {
   getProductsList,
   getProductsById,
   createProduct,
+  catalogBatchProcess,
 } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
@@ -43,6 +44,7 @@ const serverlessConfiguration: AWS = {
     getProductsList,
     getProductsById,
     createProduct,
+    catalogBatchProcess,
   },
   package: { individually: true },
   custom: {
@@ -61,6 +63,20 @@ const serverlessConfiguration: AWS = {
       host: "${self:custom.client.apiHostPath}",
     },
   },
+  resources: {
+    Resources: {
+      catalogItemsQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'aws-course-catalog-items-queue',
+          // RedrivePolicy: {
+          //   deadletterTargetArn: '',
+          //   maxReceiveCount: 3,
+          // },
+        },
+      }
+    }
+  }
 };
 
 module.exports = serverlessConfiguration;
