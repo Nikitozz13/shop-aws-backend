@@ -4,8 +4,9 @@ const catalogBatchProcess: SQSHandler = async (event: SQSEvent) => {
   console.log('SQSHandler:event:catalogBatchProcess', event);
 
   try {
-    const payload = event.Records[0];
-    console.log('SQSHandler:event:eventRecordBody', JSON.stringify(payload));
+    for (const record of event.Records) {
+      console.log('Record: ', record);
+    }
 
     console.log('SQSHandler:result: function execution completed with success');
   } catch (e) {

@@ -4,7 +4,10 @@ import {
   CopyObjectCommand,
   DeleteObjectCommand
 } from '@aws-sdk/client-s3';
+import  { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs"
 import { parseCsvStream } from '@utils/parse-csv';
+
+const QUEUE_URL = 'https://sqs.eu-west-2.amazonaws.com/136908532975/aws-course-catalog-items-queue';
 
 const importFileParser = async (event) => {
   console.log('S3:importFileParser:event', event);
@@ -16,8 +19,19 @@ const importFileParser = async (event) => {
         Bucket: process.env.S3_BUCKET,
         Key: record.s3.object.key,
       }));
-      
-      await parseCsvStream(s3Data.Body as NodeJS.ReadableStream);
+
+      const sqsClient = new SQSClient({ region: process.env.AWS_REGION });
+
+      const csvData = await parseCsvStream(s3Data.Body as NodeJS.ReadableStream);
+      csvData.forEach(async (dataRow) => {
+        const data = await sqsClient.send(new SendMessageCommand({
+          QueueUrl: QUEUE_URL,
+          MessageBody: JSON.stringify(dataRow),
+        }));
+        console.log("SQSClient:SendMessageCommand", data);
+      });
+
+      console.log("SQSClient:Finished");
 
       await s3client.send(new CopyObjectCommand({
         Bucket: process.env.S3_BUCKET,
@@ -30,7 +44,7 @@ const importFileParser = async (event) => {
         Key: record.s3.object.key,
       }));
 
-      console.log('Parsed file ' + record.s3.object.key.split('/')[1] + ' finished');
+      console.log('Parsed file "' + record.s3.object.key.split('/')[1] + '" finished');
     }
   } catch (e) {
     console.log(e.message);
