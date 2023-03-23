@@ -5,8 +5,9 @@ jspm_packages
 # Serverless directories
 .serverless
 
-# esbuild directories
+# esbuild and webpack directories
 .esbuild
+.webpack
 
 # jest
 coverage
