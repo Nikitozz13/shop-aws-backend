@@ -1,10 +1,10 @@
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { v4 as uuidv4 } from 'uuid';
-import { SQSEvent, SQSHandler } from 'aws-lambda';
+import { SQSEvent } from 'aws-lambda';
 import { createProductTransaction as createProductRequest } from '@libs/dynamo-service';
 import { InvalidProductDataError } from '@libs/errors';
 
-const catalogBatchProcess: SQSHandler = async (event: SQSEvent) => {
+const catalogBatchProcess = async (event: SQSEvent) => {
   console.log('SQSHandler:event:catalogBatchProcess', event);
 
   try {
