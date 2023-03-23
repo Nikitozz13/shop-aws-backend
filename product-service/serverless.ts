@@ -28,11 +28,19 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       PRODUCTS_TABLE_NAME: 'my-store-app_products',
       STOCKS_TABLE_NAME: 'my-store-app_stocks',
+      CREATE_PRODUCT_TOPIC_ARN: { 'Ref': 'createProductTopic' },
     },
     iam: {
       role: {
         name: '',
         managedPolicies: ['arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'],
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: 'sns:Publish',
+            Resource: '${self:provider.environment.CREATE_PRODUCT_TOPIC_ARN}',
+          }
+        ]
       },
     },
     httpApi: {
@@ -69,12 +77,20 @@ const serverlessConfiguration: AWS = {
         Type: 'AWS::SQS::Queue',
         Properties: {
           QueueName: 'aws-course-catalog-items-queue',
-          // RedrivePolicy: {
-          //   deadletterTargetArn: '',
-          //   maxReceiveCount: 3,
-          // },
         },
-      }
+      },
+      createProductTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'aws-course-create-product-topic',
+          Subscription: [
+            {
+              Protocol: 'email',
+              Endpoint: 'nikitozz_13@mail.ru',
+            },
+          ],
+        },
+      },
     }
   }
 };
