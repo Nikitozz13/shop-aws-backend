@@ -19,19 +19,18 @@ const catalogBatchProcess: SQSHandler = async (event: SQSEvent) => {
       }
 
       const uuid = uuidv4();
-      const result = await createProductRequest(
-        { id: uuid, title, description, price },
-        { product_id: uuid, count }
-      );
+      const product =  { id: uuid, title, description, price: Number(price) };
+      const stock =  { product_id: uuid, count: Number(count) };
+      const result = await createProductRequest(product, stock);
       console.log('Dynamo:result:createProductWithStock', result);
-    }
 
-    const snsResult = await snsClient.send(new PublishCommand({
-      Subject: 'AWS Products creation',
-      Message: 'Products have been created successfully',
-      TopicArn: process.env.CREATE_PRODUCT_TOPIC_ARN,
-    }));
-    console.log('SNSPublishCommand:result finished with success', snsResult);
+      const snsResult = await snsClient.send(new PublishCommand({
+        Subject: 'AWS Products creation',
+        Message: JSON.stringify(product),
+        TopicArn: process.env.CREATE_PRODUCT_TOPIC_ARN,
+      }));
+      console.log('SNSPublishCommand:result finished with success', snsResult);
+    }
 
     console.log('SQSHandler:result: function execution completed with success');
   } catch (e) {

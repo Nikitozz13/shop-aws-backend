@@ -91,6 +91,18 @@ const serverlessConfiguration: AWS = {
           ],
         },
       },
+      createProductTopicSubscriptionByPrice: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          Endpoint: 'nikita_staroseltsev@epam.com',
+          TopicArn: '${self:provider.environment.CREATE_PRODUCT_TOPIC_ARN}',
+          FilterPolicyScope: 'MessageBody',
+          FilterPolicy: {
+            price: [{ numeric: ['>', 40, '<=', 100] }],
+          },
+        }
+      }
     }
   }
 };
