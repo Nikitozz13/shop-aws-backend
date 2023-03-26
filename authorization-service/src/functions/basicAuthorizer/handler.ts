@@ -1,17 +1,17 @@
-import type { APIGatewayTokenAuthorizerHandler, APIGatewayAuthorizerResult } from "aws-lambda"
+import type {
+  APIGatewayRequestIAMAuthorizerHandlerV2,
+  APIGatewayIAMAuthorizerResult,
+} from "aws-lambda"
 import { middyfy } from '@libs/lambda';
 
-const basicAuthorizer: APIGatewayTokenAuthorizerHandler = async (event) => {
-  
+const basicAuthorizer: APIGatewayRequestIAMAuthorizerHandlerV2 = async (event) => {
   console.log('Event: ', JSON.stringify(event));
-
-  if (event.type !== 'TOKEN') {
-    return 'Unauthorized';
+  if (event.type !== 'REQUEST') {
+    throw 'Unauthorized';
   }
 
   try {
-    const authToken = event.authorizationToken;
-
+    const authToken = event.identitySource[0];
     const encodedCredentials = authToken.split(' ')[1];
     const buffer = Buffer.from(encodedCredentials, 'base64');
     const [username, password] = buffer.toString('utf-8').split(':');
@@ -20,16 +20,15 @@ const basicAuthorizer: APIGatewayTokenAuthorizerHandler = async (event) => {
 
     const storedUserPassword = process.env[username];
     const effect = !storedUserPassword || storedUserPassword !== password ? 'Deny' : 'Allow';
-
-    return generatePolicy(encodedCredentials, event.methodArn, effect);
+    return generatePolicy(encodedCredentials, event.routeArn, effect);
 
   } catch (e) {
-    return `Unauthorized: ${e.message}`;
+    throw `Unauthorized: ${e.message}`;
   }
 };
 
 const generatePolicy = (principalId: string, resource: string, effect: string = 'Allow') => {
-  const policy: APIGatewayAuthorizerResult = {
+  const policy: APIGatewayIAMAuthorizerResult = {
     principalId,
     policyDocument: {
       Version: '2012-10-17',
