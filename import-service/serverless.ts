@@ -30,6 +30,11 @@ const serverlessConfiguration: AWS = {
         Action: 's3:*',
         Resource: 'arn:aws:s3:::${self:provider.environment.S3_BUCKET}/*',
       },
+      {
+        Effect: 'Allow',
+        Action: 'sqs:SendMessage',
+        Resource: 'arn:aws:sqs:eu-west-2:136908532975:aws-course-catalog-items-queue',
+      },
     ],
     httpApi: {
       cors: true,
