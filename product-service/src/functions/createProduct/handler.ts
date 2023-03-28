@@ -2,16 +2,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { middyfy } from '@libs/lambda';
 import { formatJSONResponse } from '@libs/api-gateway';
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
+import { InvalidProductDataError } from '@libs/errors';
 import { createProductTransaction as createProductRequest } from '@libs/dynamo-service';
 
 import schema from './schema';
-
-class InvalidProductDataError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "InvalidProductDataError";
-  }
-}
 
 const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {

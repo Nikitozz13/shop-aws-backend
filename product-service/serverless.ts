@@ -4,6 +4,7 @@ import {
   getProductsList,
   getProductsById,
   createProduct,
+  catalogBatchProcess,
 } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
@@ -27,11 +28,19 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       PRODUCTS_TABLE_NAME: 'my-store-app_products',
       STOCKS_TABLE_NAME: 'my-store-app_stocks',
+      CREATE_PRODUCT_TOPIC_ARN: { 'Ref': 'createProductTopic' },
     },
     iam: {
       role: {
         name: '',
         managedPolicies: ['arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'],
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: 'sns:Publish',
+            Resource: '${self:provider.environment.CREATE_PRODUCT_TOPIC_ARN}',
+          }
+        ]
       },
     },
     httpApi: {
@@ -43,6 +52,7 @@ const serverlessConfiguration: AWS = {
     getProductsList,
     getProductsById,
     createProduct,
+    catalogBatchProcess,
   },
   package: { individually: true },
   custom: {
@@ -61,6 +71,40 @@ const serverlessConfiguration: AWS = {
       host: "${self:custom.client.apiHostPath}",
     },
   },
+  resources: {
+    Resources: {
+      catalogItemsQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'aws-course-catalog-items-queue',
+        },
+      },
+      createProductTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'aws-course-create-product-topic',
+          Subscription: [
+            {
+              Protocol: 'email',
+              Endpoint: 'nikitozz_13@mail.ru',
+            },
+          ],
+        },
+      },
+      createProductTopicSubscriptionByPrice: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          Endpoint: 'nikita_staroseltsev@epam.com',
+          TopicArn: '${self:provider.environment.CREATE_PRODUCT_TOPIC_ARN}',
+          FilterPolicyScope: 'MessageBody',
+          FilterPolicy: {
+            price: [{ numeric: ['>', 40, '<=', 100] }],
+          },
+        }
+      }
+    }
+  }
 };
 
 module.exports = serverlessConfiguration;

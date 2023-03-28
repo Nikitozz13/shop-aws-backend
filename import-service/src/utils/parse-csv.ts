@@ -2,15 +2,13 @@ import csv from 'csv-parser';
 
 export const parseCsvStream = async (stream: NodeJS.ReadableStream) => {
   const csvResult = [];
-  return new Promise((resolve, reject) => {
+  return new Promise<any[]>((resolve, reject) => {
     stream
       .pipe(csv())
       .on('data', (data) => {
-        console.log('utils:parseCsvStream:onData', data);
         csvResult.push(data);
       })
       .on('end', () => {
-        console.log('utils:parseCsvStream:onEnd', csvResult);
         resolve(csvResult);
       })
       .on('error', (error) => {
